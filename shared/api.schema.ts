@@ -52,6 +52,9 @@ export interface paths {
   "/api/user": {
     delete: operations["UserController_deleteUser"];
   };
+  "/api/user/profile/username": {
+    post: operations["UserController_changeUsername"];
+  };
   "/api/user/profile/password": {
     post: operations["UserController_changePassword"];
   };
@@ -899,6 +902,13 @@ export interface operations {
   UserController_deleteUser: {
     responses: {
       200: {
+        content: never;
+      };
+    };
+  };
+  UserController_changeUsername: {
+    responses: {
+      201: {
         content: never;
       };
     };

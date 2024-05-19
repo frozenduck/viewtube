@@ -103,6 +103,15 @@ export class UserController {
     }
   }
 
+  @Post('profile/username')
+  @HttpCode(201)
+  async changeUsername(
+    @Req() request: ViewTubeRequest,
+    @Body('newUsername') newUsername: string
+  ): Promise<void> {
+    await this.userService.changeUsername(request.user.username, newUsername);
+  }
+
   @Post('profile/password')
   @HttpCode(201)
   async changePassword(

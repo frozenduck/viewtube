@@ -379,12 +379,27 @@ export class UserService {
           throw new InternalServerErrorException(error);
         });
 
-        archive.finalize();
+        await archive.finalize();
 
         return archive;
       } catch (error) {
         throw new InternalServerErrorException(error);
       }
+    }
+  }
+
+  async changeUsername(oldUsername: string, newUsername: string) {
+    const userData = await this.UserModel.findOne({ username: oldUsername });
+    if (userData) {
+      if (newUsername) {
+        userData.username = newUsername;
+        await userData.save();
+      }
+      else {
+        throw new HttpException('New username is not correct', 403);
+      }
+    } else {
+      throw new HttpException('User not found', 404);
     }
   }
 

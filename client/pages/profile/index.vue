@@ -7,6 +7,7 @@ import HistoryList from '@/components/history/HistoryList.vue';
 import { useMessagesStore } from '~/store/messages';
 import { useSettingsStore } from '@/store/settings';
 import { useUserStore } from '@/store/user';
+import UsernameChangeForm from '@/components/form/UsernameChangeForm.vue';
 import PasswordChangeForm from '@/components/form/PasswordChangeForm.vue';
 
 const messagesStore = useMessagesStore();
@@ -22,6 +23,7 @@ const deleteAccountPopup = ref(false);
 const actionsOpen = ref(false);
 const repeatedUsername = ref('');
 const profileImageLoading = ref(false);
+const usernameChangePopup = ref(false);
 const passwordChangePopup = ref(false);
 const profileImageUrl = computed(() => {
   if (profile.value?.profileImage) {
@@ -53,6 +55,12 @@ const hasHistory = computed(() => {
   }
   return false;
 });
+const onChangeUsernamePopup = () => {
+  usernameChangePopup.value = true;
+};
+const onChangeUsernameClose = () => {
+  usernameChangePopup.value = false;
+};
 const onChangePasswordPopup = () => {
   passwordChangePopup.value = true;
 };
@@ -235,6 +243,9 @@ const logout = async () => {
             <VTIcon name="mdi:chevron-up" class="chevron-icon" />
           </label>
           <div class="actions-details">
+            <BadgeButton class="action" :click="onChangeUsernamePopup"
+            ><VTIcon name="mdi:form-textbox-password" />Change username</BadgeButton
+            >
             <BadgeButton class="action" :click="onChangePasswordPopup"
               ><VTIcon name="mdi:form-textbox-password" />Change password</BadgeButton
             >
@@ -265,6 +276,12 @@ const logout = async () => {
       <HistoryList :history-videos="profile.videoHistory" :delete-option="false" />
     </div>
     <Teleport to="body">
+      <transition name="popup">
+        <UsernameChangeForm
+          v-if="usernameChangePopup"
+          @username-change-close="onChangeUsernameClose"
+        />
+      </transition>
       <transition name="popup">
         <PasswordChangeForm
           v-if="passwordChangePopup"
